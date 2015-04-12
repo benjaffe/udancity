@@ -36,6 +36,7 @@ var headphoneMsg = document.getElementById('headphone-msg');
 
       var relPos = pos - 2080;
       var beat = Math.floor(relPos/1000/60*112)+1;
+      var doubleBeat = Math.floor(relPos/1000/60*112*2)+1;
       console.log(beat);
 
       // intro
@@ -45,8 +46,8 @@ var headphoneMsg = document.getElementById('headphone-msg');
 
       // pauses
       else if ((beat > 33 && beat < 36) ||
-          (beat >= 223 && beat < 225) ||
-          (beat >= 350 && beat < 352)) {
+              (beat >= 223 && beat < 225) ||
+              (beat >= 350 && beat < 352)) {
         return false;
       }
 
@@ -71,8 +72,24 @@ var headphoneMsg = document.getElementById('headphone-msg');
         img.style.display = 'none';
       });
 
+
+      // double time
+      if (beat >= 445 && beat < 446) {
+        imgs[ doubleBeat % 2 ].style.display = 'block';
+      } else if (beat > 446) {
+        imgs[ (beat + 1) % 2 ].style.display = 'block'; // offset by 1 cause of the double beat
+      }
+
+      // half time
+      else if ((beat >= 161 && beat < 177) ||
+               (beat >= 289 && beat < 321)) {
+        imgs[ Math.floor((beat - 1)/2) % 2 ].style.display = 'block';
+      }
+
       // normal time
-      imgs[ beat % 2 ].style.display = 'block';
+      else {
+        imgs[ beat % 2 ].style.display = 'block';
+      }
 
     });
   }
