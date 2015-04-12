@@ -40,6 +40,10 @@ var playBarStatus = document.getElementById('play-bar-status');
     }, 5000);
   }, false);
 
+  playBar.addEventListener('click', function (e) {
+    widget.seekTo( (e.offsetX / playBar.offsetWidth) * duration );
+  });
+
   function showImage (num) {
     imgs.forEach(function(img, i){
       if (i === num) {
@@ -62,6 +66,7 @@ var playBarStatus = document.getElementById('play-bar-status');
 
       // intro
       if (pos < 2090) {
+        showImage(null);
         return false;
       }
 
