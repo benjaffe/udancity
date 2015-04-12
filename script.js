@@ -31,6 +31,16 @@ var headphoneMsg = document.getElementById('headphone-msg');
     }, 5000);
   }, false);
 
+  function showImage (num) {
+    imgs.forEach(function(img, i){
+      if (i === num) {
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
+    });
+  }
+
   function updateImage() {
     widget.getPosition(function(pos){
 
@@ -55,9 +65,7 @@ var headphoneMsg = document.getElementById('headphone-msg');
       else if (pos > 241980) {
         document.body.style.transition = "";
         document.body.style.opacity = 1;
-        imgs.forEach(function(img){
-          img.style.display = 'none';
-        });
+        showImage(null);
         playBtn.style.opacity = 1;
         return false;
       }
@@ -68,27 +76,21 @@ var headphoneMsg = document.getElementById('headphone-msg');
         document.body.style.opacity = 0;
       }
 
-      imgs.forEach(function(img){
-        img.style.display = 'none';
-      });
-
 
       // double time
       if (beat >= 445 && beat < 446) {
-        imgs[ doubleBeat % 2 ].style.display = 'block';
-      } else if (beat > 446) {
-        imgs[ (beat + 1) % 2 ].style.display = 'block'; // offset by 1 cause of the double beat
+        showImage( doubleBeat % 2 );
       }
 
       // half time
       else if ((beat >= 161 && beat < 177) ||
                (beat >= 289 && beat < 321)) {
-        imgs[ Math.floor((beat - 1)/2) % 2 ].style.display = 'block';
+        showImage( Math.floor((beat - 1)/2) % 2 );
       }
 
       // normal time
       else {
-        imgs[ beat % 2 ].style.display = 'block';
+        showImage( beat % 2 );
       }
 
     });
