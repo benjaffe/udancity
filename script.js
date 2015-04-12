@@ -27,7 +27,8 @@ var headphoneMsg = document.getElementById('headphone-msg');
       playBtn.style.pointerEvents = "auto";
       headphoneMsg.style.color = "white";
       headphoneMsg.style.opacity = 1;
-      headphoneMsg.textContent = "Click to Replay";
+      headphoneMsg.style.marginTop = "-25px";
+      headphoneMsg.innerHTML = 'Udancity<br><span style="font-size:0.8em;">Click to Replay<span>';
     }, 5000);
   }, false);
 
