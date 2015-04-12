@@ -2,14 +2,21 @@ var imgs = [document.getElementById('image0'), document.getElementById('image1')
 var playBtn = document.getElementById('playBtn');
 var playBtnImg = document.getElementById('playBtnImg');
 var headphoneMsg = document.getElementById('headphone-msg');
+var playBar = document.getElementById('play-bar');
+var playBarStatus = document.getElementById('play-bar-status');
 
 (function(){
   var widgetIframe = document.getElementById('sc-widget');
   var widget = SC.Widget(widgetIframe);
+  var duration;
   window.widget = widget;
 
   widget.bind(SC.Widget.Events.READY, function() {
-
+    widget.getDuration(function(d) {
+      duration = d;
+      document.body.style.opacity = 1;
+      document.body.style.pointerEvents = 'auto';
+    });
   });
 
   playBtn.addEventListener('click', function(){
@@ -20,11 +27,12 @@ var headphoneMsg = document.getElementById('headphone-msg');
     this.style.transform = 'rotate(80deg) scale(0.3)';
     this.style.pointerEvents = 'none';
     headphoneMsg.style.opacity = 0;
+    playBar.style.height = '10px';
+
     setTimeout(function(){
       playBtnImg.src = "udacity-logo.png";
       playBtn.style.transition = "";
       playBtn.style.transform = "";
-      playBtn.style.pointerEvents = "auto";
       headphoneMsg.style.color = "white";
       headphoneMsg.style.opacity = 1;
       headphoneMsg.style.marginTop = "-25px";
@@ -45,13 +53,15 @@ var headphoneMsg = document.getElementById('headphone-msg');
   function updateImage() {
     widget.getPosition(function(pos){
 
-      var relPos = pos - 2080;
+      var relPos = pos - 2090;
       var beat = Math.floor(relPos/1000/60*112)+1;
       var doubleBeat = Math.floor(relPos/1000/60*112*2)+1;
       console.log(beat);
 
+      playBarStatus.style.width = ((pos / duration) * 100) + '%';
+
       // intro
-      if (pos < 2080) {
+      if (pos < 2090) {
         return false;
       }
 
@@ -66,6 +76,7 @@ var headphoneMsg = document.getElementById('headphone-msg');
       else if (pos > 241980) {
         document.body.style.transition = "";
         document.body.style.opacity = 1;
+        playBtn.style.pointerEvents = "auto";
         showImage(null);
         playBtn.style.opacity = 1;
         return false;
@@ -73,19 +84,25 @@ var headphoneMsg = document.getElementById('headphone-msg');
 
       // ending drums
       else if (beat >= 445) {
-        document.body.style.transition = "opacity 2s";
         document.body.style.opacity = 0;
+        playBar.style.height = '0';
       }
 
 
-      // double time
-      if (beat >= 445 && beat < 446) {
-        showImage( doubleBeat % 2 );
+      // triplets
+      if (beat >= 257 && beat < 288 ||
+         (beat >= 321 && beat < 349)) {
+        if (doubleBeat % 8 === 1 || doubleBeat % 8 === 3 || doubleBeat % 8 === 6) {
+          showImage( 1 );
+        } else if (doubleBeat % 8 === 2 || doubleBeat % 8 === 5 || doubleBeat % 8 === 7) {
+          showImage( 0 );
+        }
       }
 
       // half time
       else if ((beat >= 161 && beat < 177) ||
-               (beat >= 289 && beat < 321)) {
+               (beat >= 289 && beat < 321) ||
+               (beat > 417)) {
         showImage( Math.floor((beat - 1)/2) % 2 );
       }
 
